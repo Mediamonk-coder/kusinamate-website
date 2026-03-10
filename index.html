@@ -1218,6 +1218,8 @@
       .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
       .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
       .hero-dot-1, .hero-dot-2, .hero-dot-3 { display: none; }
+      .store-logos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+      .store-link { justify-content: center; padding: 8px 12px; font-size: 0.8rem; }
     }
   </style>
 </head>
@@ -1355,19 +1357,19 @@
     <div class="strip-label">Available At</div>
     <div class="store-logos">
       <a href="https://ph.shp.ee/yTamm99g" target="_blank" rel="noopener" class="store-link">
-        <svg viewBox="0 0 24 24" fill="#EE4D2D"><path d="M12 2C6.48 2 2 6.02 2 10.92c0 2.43 1.07 4.63 2.78 6.25l-.02 3.2c0 .4.44.64.77.42l2.88-1.88c.86.26 1.77.41 2.72.44h.2c.08 0 .15 0 .23-.01.25.52.56 1.01.92 1.46a3.03 3.03 0 001.52.82v.01c.33.08.68.12 1.03.12 2.76 0 5-2.24 5-5a4.98 4.98 0 00-1.85-3.88C21.17 11.17 22 9.13 22 10.92c0-4.9-4.48-8.92-10-8.92zm-1.97 12.59L7.28 12l-2.69 2.59V12l5.44-5.22L12.78 9.4l2.69-2.59v2.59L10.03 14.59z"/></svg>
+        <img src="assets/stores/shopee.png" alt="Shopee">
         Shopee
       </a>
-      <a href="https://www.tiktok.com/@opc.outlet.store?_r=1&_t=ZS-94ZAGzZx7DR" target="_blank" rel="noopener" class="store-link">
-        <svg viewBox="0 0 24 24" fill="#000000"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V8.75a8.18 8.18 0 004.76 1.52V6.84a4.84 4.84 0 01-1-.15z"/></svg>
+      <a href="https://vt.tiktok.com/ZSuraGcDV/?page=TikTokShop" target="_blank" rel="noopener" class="store-link">
+        <svg viewBox="0 0 24 24" fill="#000000" width="24" height="24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V8.75a8.18 8.18 0 004.76 1.52V6.84a4.84 4.84 0 01-1-.15z"/></svg>
         TikTok Shop
       </a>
       <a href="https://opcoutletshop.com" target="_blank" rel="noopener" class="store-link">
-        <svg viewBox="0 0 24 24" fill="var(--coral)" stroke="var(--coral)" stroke-width="0"><path d="M3 3h18v2H3V3zm0 4h18v14H3V7zm2 2v10h14V9H5zm2 2h4v3H7v-3zm5 0h5v1h-5v-1zm0 2h5v1h-5v-1z"/></svg>
+        <img src="assets/stores/opc-outlet.png" alt="OPC Outlet Shop">
         OPC Outlet Shop
       </a>
       <a href="https://negosyonow.com/organization/onprem-concepts/" target="_blank" rel="noopener" class="store-link">
-        <svg viewBox="0 0 24 24" fill="#1a8b4d"><path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.18L19.09 7.5 12 10.82 4.91 7.5 12 4.18zM4 8.72l7 3.5v7.56l-7-3.5V8.72zm9 11.06v-7.56l7-3.5v7.56l-7 3.5z"/></svg>
+        <img src="assets/stores/negosyonow.png" alt="NegosyoNow">
         NegosyoNow
       </a>
     </div>
@@ -1727,15 +1729,21 @@
     <p>Order Kusinamate sauces today. Pang-bahay man o pang-negosyo, we've got your back (and your ulam).</p>
     <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 2;">
       <a href="https://ph.shp.ee/yTamm99g" target="_blank" rel="noopener" class="btn btn-white">
-        <svg viewBox="0 0 24 24" fill="#EE4D2D" width="18" height="18" style="vertical-align: -3px; margin-right: 4px;"><path d="M12 2C6.48 2 2 6.02 2 10.92c0 2.43 1.07 4.63 2.78 6.25l-.02 3.2c0 .4.44.64.77.42l2.88-1.88c.86.26 1.77.41 2.72.44h.2c.08 0 .15 0 .23-.01.25.52.56 1.01.92 1.46a3.03 3.03 0 001.52.82v.01c.33.08.68.12 1.03.12 2.76 0 5-2.24 5-5a4.98 4.98 0 00-1.85-3.88C21.17 11.17 22 9.13 22 10.92c0-4.9-4.48-8.92-10-8.92z"/></svg>
+        <img src="assets/stores/shopee.png" alt="" style="height: 18px; width: 18px; object-fit: contain; vertical-align: -3px; margin-right: 4px; display: inline;">
         Shopee
       </a>
-      <a href="https://www.tiktok.com/@opc.outlet.store?_r=1&_t=ZS-94ZAGzZx7DR" target="_blank" rel="noopener" class="btn btn-white">
-        <svg viewBox="0 0 24 24" fill="#000" width="18" height="18" style="vertical-align: -3px; margin-right: 4px;"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V8.75a8.18 8.18 0 004.76 1.52V6.84a4.84 4.84 0 01-1-.15z"/></svg>
+      <a href="https://vt.tiktok.com/ZSuraGcDV/?page=TikTokShop" target="_blank" rel="noopener" class="btn btn-white">
+        <svg viewBox="0 0 24 24" fill="#000" width="18" height="18" style="vertical-align: -3px; margin-right: 4px; display: inline;"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V8.75a8.18 8.18 0 004.76 1.52V6.84a4.84 4.84 0 01-1-.15z"/></svg>
         TikTok Shop
       </a>
-      <a href="https://opcoutletshop.com" target="_blank" rel="noopener" class="btn btn-white">OPC Outlet</a>
-      <a href="https://negosyonow.com/organization/onprem-concepts/" target="_blank" rel="noopener" class="btn btn-white">NegosyoNow</a>
+      <a href="https://opcoutletshop.com" target="_blank" rel="noopener" class="btn btn-white">
+        <img src="assets/stores/opc-outlet.png" alt="" style="height: 18px; width: auto; object-fit: contain; vertical-align: -3px; margin-right: 4px; display: inline;">
+        OPC Outlet
+      </a>
+      <a href="https://negosyonow.com/organization/onprem-concepts/" target="_blank" rel="noopener" class="btn btn-white">
+        <img src="assets/stores/negosyonow.png" alt="" style="height: 18px; width: 18px; object-fit: contain; vertical-align: -3px; margin-right: 4px; display: inline;">
+        NegosyoNow
+      </a>
     </div>
   </div>
 
@@ -1755,7 +1763,7 @@
         <h4>Shop</h4>
         <ul>
           <li><a href="https://ph.shp.ee/yTamm99g" target="_blank" rel="noopener">Shopee</a></li>
-          <li><a href="https://www.tiktok.com/@opc.outlet.store?_r=1&_t=ZS-94ZAGzZx7DR" target="_blank" rel="noopener">TikTok Shop</a></li>
+          <li><a href="https://vt.tiktok.com/ZSuraGcDV/?page=TikTokShop" target="_blank" rel="noopener">TikTok Shop</a></li>
           <li><a href="https://opcoutletshop.com" target="_blank" rel="noopener">OPC Outlet Shop</a></li>
           <li><a href="https://negosyonow.com/organization/onprem-concepts/" target="_blank" rel="noopener">NegosyoNow</a></li>
         </ul>
