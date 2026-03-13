@@ -1991,25 +1991,18 @@
         ? '9538b828-453a-4260-9491-846a06a032ec'   // Kusinamate Dealer
         : '9ee8f490-a668-4dc8-af82-89223f4d54f7';  // Food Service Account
 
-      const customFields = isDealer
-        ? {
-            'field-1773388461757': fullName,
-            'field-1773388478791': businessName,
-            [isEmail ? 'field-1773388572024' : 'field-1773388509974']: contact,
-            'field-1773388587557': message
-          }
-        : {
-            'field-1773388972439': fullName,
-            'field-1773388991055': businessName,
-            [isEmail ? 'field-1773389032005' : 'field-1773389016405']: contact,
-            'field-1773389042104': message
-          };
+      const customFields = {
+        full_name: fullName,
+        business_name: businessName,
+        [isEmail ? 'email' : 'phone']: contact,
+        message: message
+      };
 
       try {
         const res = await fetch('https://mamnklluvbecmdsdepuh.supabase.co/functions/v1/submit-application', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ lead_type_id: leadTypeId, custom_fields: customFields })
+          body: JSON.stringify({ lead_type_id: leadTypeId, custom_fields: customFields, source: 'kusinamate_website' })
         });
         const data = await res.json();
         if (!data.success) throw new Error(data.message);
