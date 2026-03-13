@@ -1760,7 +1760,7 @@
           <a href="https://www.instagram.com/kusinamate.sauces?igsh=Z2wwMDM1amUxbHc1" target="_blank" rel="noopener" title="Instagram">
             <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
           </a>
-          <a href="https://www.tiktok.com/@opc.outlet.store?_r=1&_t=ZS-94ZAGzZx7DR" target="_blank" rel="noopener" title="TikTok">
+          <a href="https://www.tiktok.com/@kusinamate.official?_r=1&_t=ZS-94b5HvLhVOn" target="_blank" rel="noopener" title="TikTok">
             <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V8.75a8.18 8.18 0 004.76 1.52V6.84a4.84 4.84 0 01-1-.15z"/></svg>
           </a>
         </div>
@@ -1844,15 +1844,14 @@
 
     // ── SUPABASE CLIENT ──
     const SUPABASE_URL = 'https://mzjaqjxdisxrnxgqpxpo.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im16amFxanhkaXN4cm54Z3FweHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY1MTkzMTQsImV4cCI6MjA2MjA5NTMxNH0.z9Wy0-tsaMlkS1UJbOGSXkVaqKh59iGm-qucL1uHnDU';
+    const SUPABASE_KEY = 'sb_publishable_5BmRNBytl2oQ16q6J808Gw_Gi7bTkQZ';
 
     // Lightweight Supabase REST helper (no SDK needed)
     const supabase = {
       from(table) {
         let url = `${SUPABASE_URL}/rest/v1/${table}`;
         const headers = {
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'apikey': SUPABASE_KEY,
           'Content-Type': 'application/json'
         };
         let params = [];
@@ -1924,7 +1923,7 @@
 
           const link = document.createElement('a');
           link.className = 'recipe-card';
-          link.href = 'recipe.html?id=' + recipe.id;
+          link.href = 'recipe.html?id=' + recipe.slug;
           link.style.textDecoration = 'none';
           link.style.color = 'inherit';
           link.innerHTML = `
@@ -1980,16 +1979,40 @@
       btn.disabled = true;
       btn.textContent = 'Sending...';
 
-      try {
-        const { error } = await supabase.from('partner_inquiries').insert({
-          full_name: document.getElementById('pFullName').value.trim(),
-          business_name: document.getElementById('pBusinessName').value.trim(),
-          contact: document.getElementById('pContact').value.trim(),
-          partner_type: document.getElementById('pPartnerType').value,
-          message: document.getElementById('pMessage').value.trim() || null
-        });
+      const partnerType = document.getElementById('pPartnerType').value;
+      const fullName = document.getElementById('pFullName').value.trim();
+      const businessName = document.getElementById('pBusinessName').value.trim();
+      const contact = document.getElementById('pContact').value.trim();
+      const message = document.getElementById('pMessage').value.trim() || undefined;
+      const isEmail = contact.includes('@');
 
-        if (error) throw error;
+      const isDealer = partnerType === 'Stock & Sell';
+      const leadTypeId = isDealer
+        ? '9538b828-453a-4260-9491-846a06a032ec'   // Kusinamate Dealer
+        : '9ee8f490-a668-4dc8-af82-89223f4d54f7';  // Food Service Account
+
+      const customFields = isDealer
+        ? {
+            'field-1773388461757': fullName,
+            'field-1773388478791': businessName,
+            [isEmail ? 'field-1773388572024' : 'field-1773388509974']: contact,
+            'field-1773388587557': message
+          }
+        : {
+            'field-1773388972439': fullName,
+            'field-1773388991055': businessName,
+            [isEmail ? 'field-1773389032005' : 'field-1773389016405']: contact,
+            'field-1773389042104': message
+          };
+
+      try {
+        const res = await fetch('https://mamnklluvbecmdsdepuh.supabase.co/functions/v1/submit-application', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ lead_type_id: leadTypeId, custom_fields: customFields })
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message);
 
         document.getElementById('modalForm').style.display = 'none';
         document.getElementById('modalSuccess').style.display = '';
