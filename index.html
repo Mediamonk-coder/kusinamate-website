@@ -1904,6 +1904,10 @@
             params.push(`${col}=eq.${encodeURIComponent(val)}`);
             return this;
           },
+          in(col, vals) {
+            params.push(`${col}=in.(${vals.map(v => encodeURIComponent(v)).join(',')})`);
+            return this;
+          },
           order(col, { ascending = true } = {}) {
             params.push(`order=${col}.${ascending ? 'asc' : 'desc'}`);
             return this;
@@ -1943,15 +1947,29 @@
 
     (async () => {
       try {
+        // Fetch only IDs of published recipes (lightweight query)
+        const { data: allIds } = await supabase
+          .from('recipes')
+          .select('id')
+          .eq('published', true)
+          .execute();
+
+        // Randomly pick 6 IDs using Fisher-Yates shuffle
+        for (let i = allIds.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [allIds[i], allIds[j]] = [allIds[j], allIds[i]];
+        }
+        const pickedIds = allIds.slice(0, 6).map(r => r.id);
+
+        // Fetch full details for only the 6 selected recipes
         const { data: recipes } = await supabase
           .from('recipes')
           .select('*')
-          .eq('published', true)
-          .order('created_at', { ascending: false })
+          .in('id', pickedIds)
           .execute();
 
         const grid = document.getElementById('recipeGrid');
-        recipes.slice(0, 6).forEach((recipe, i) => {
+        recipes.forEach((recipe, i) => {
           const colors = colorPairs[i % colorPairs.length];
           const tagColor = recipe.tag_color || '#D4380D';
           const hasImage = recipe.image && recipe.image.length > 0;
