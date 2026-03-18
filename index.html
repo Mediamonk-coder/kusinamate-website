@@ -1904,6 +1904,10 @@
             params.push(`${col}=eq.${encodeURIComponent(val)}`);
             return this;
           },
+          in(col, vals) {
+            params.push(`${col}=in.(${vals.map(v => encodeURIComponent(v)).join(',')})`);
+            return this;
+          },
           order(col, { ascending = true } = {}) {
             params.push(`order=${col}.${ascending ? 'asc' : 'desc'}`);
             return this;
@@ -1943,18 +1947,26 @@
 
     (async () => {
       try {
-        const { data: allRecipes } = await supabase
+        // Fetch only IDs of published recipes (lightweight query)
+        const { data: allIds } = await supabase
           .from('recipes')
-          .select('*')
+          .select('id')
           .eq('published', true)
           .execute();
 
-        // Shuffle and pick 6 random recipes
-        for (let i = allRecipes.length - 1; i > 0; i--) {
+        // Randomly pick 6 IDs using Fisher-Yates shuffle
+        for (let i = allIds.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
-          [allRecipes[i], allRecipes[j]] = [allRecipes[j], allRecipes[i]];
+          [allIds[i], allIds[j]] = [allIds[j], allIds[i]];
         }
-        const recipes = allRecipes.slice(0, 6);
+        const pickedIds = allIds.slice(0, 6).map(r => r.id);
+
+        // Fetch full details for only the 6 selected recipes
+        const { data: recipes } = await supabase
+          .from('recipes')
+          .select('*')
+          .in('id', pickedIds)
+          .execute();
 
         const grid = document.getElementById('recipeGrid');
         recipes.forEach((recipe, i) => {
