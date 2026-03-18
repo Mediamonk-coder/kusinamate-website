@@ -2020,12 +2020,17 @@
           .execute();
 
         const grid = document.getElementById('recipeGrid');
+        // Shuffle recipes so different ones appear each visit
+        for (let i = recipes.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [recipes[i], recipes[j]] = [recipes[j], recipes[i]];
+        }
         recipes.slice(0, 6).forEach((recipe, i) => {
           const colors = colorPairs[i % colorPairs.length];
           const tagColor = recipe.tag_color || '#D4380D';
           const hasImage = recipe.image && recipe.image.length > 0;
           const imageHtml = hasImage
-            ? `<img class="recipe-card-image" loading="lazy" src="${recipe.image.replace('.png', '.webp')}" alt="${recipe.title}">`
+            ? `<img class="recipe-card-image" loading="lazy" src="${recipe.image.startsWith('assets/') ? recipe.image.replace('.png', '.webp') : recipe.image}" alt="${recipe.title}">`
             : `<div class="recipe-card-image" style="background: linear-gradient(135deg, ${colors[0]}, ${colors[1]}); display: flex; align-items: center; justify-content: center;">
                 <span style="color: rgba(255,255,255,0.7); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">${recipe.sauce}</span>
               </div>`;

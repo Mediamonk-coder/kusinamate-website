@@ -232,7 +232,7 @@
 
         const hero = document.getElementById('heroImg');
         if (recipe.image) {
-          hero.src = recipe.image.replace('.png', '.webp');
+          hero.src = recipe.image.startsWith('assets/') ? recipe.image.replace('.png', '.webp') : recipe.image;
           hero.alt = recipe.title;
         } else {
           hero.style.display = 'none';
