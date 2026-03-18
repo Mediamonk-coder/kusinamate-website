@@ -1943,15 +1943,21 @@
 
     (async () => {
       try {
-        const { data: recipes } = await supabase
+        const { data: allRecipes } = await supabase
           .from('recipes')
           .select('*')
           .eq('published', true)
-          .order('created_at', { ascending: false })
           .execute();
 
+        // Shuffle and pick 6 random recipes
+        for (let i = allRecipes.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [allRecipes[i], allRecipes[j]] = [allRecipes[j], allRecipes[i]];
+        }
+        const recipes = allRecipes.slice(0, 6);
+
         const grid = document.getElementById('recipeGrid');
-        recipes.slice(0, 6).forEach((recipe, i) => {
+        recipes.forEach((recipe, i) => {
           const colors = colorPairs[i % colorPairs.length];
           const tagColor = recipe.tag_color || '#D4380D';
           const hasImage = recipe.image && recipe.image.length > 0;
