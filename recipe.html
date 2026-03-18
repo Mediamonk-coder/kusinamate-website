@@ -4,6 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recipe — Kusinamate</title>
+  <meta name="description" content="Easy Filipino recipes made with Kusinamate coating sauces. Isang buhos, done na!">
+  <link rel="canonical" href="https://kusinamate.com/recipe.html">
+
+  <!-- Open Graph (dynamically updated by JS) -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Recipe — Kusinamate">
+  <meta property="og:description" content="Easy Filipino recipes made with Kusinamate coating sauces.">
+  <meta property="og:image" content="https://kusinamate.com/assets/hero-lifestyle.png">
+  <meta property="og:url" content="https://kusinamate.com/recipe.html">
+  <meta property="og:site_name" content="Kusinamate">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Recipe — Kusinamate">
+  <meta name="twitter:description" content="Easy Filipino recipes made with Kusinamate coating sauces.">
+  <meta name="twitter:image" content="https://kusinamate.com/assets/hero-lifestyle.png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -120,7 +137,7 @@
   <div id="loading">Loading recipe...</div>
 
   <div id="recipeContent">
-    <img id="heroImg" class="recipe-hero" src="" alt="">
+    <img id="heroImg" class="recipe-hero" src="" alt="" loading="lazy">
     <div class="recipe-container">
       <span id="tagEl" class="recipe-tag"></span>
       <h1 id="titleEl" class="recipe-title"></h1>
@@ -178,6 +195,40 @@
         }
 
         document.title = recipe.title + ' — Kusinamate Recipe';
+
+        // Update OG tags dynamically for social sharing crawlers that execute JS
+        document.querySelector('meta[property="og:title"]').content = recipe.title + ' — Kusinamate Recipe';
+        document.querySelector('meta[property="og:description"]').content = recipe.description;
+        document.querySelector('meta[name="description"]').content = recipe.description;
+        document.querySelector('meta[name="twitter:title"]').content = recipe.title + ' — Kusinamate Recipe';
+        document.querySelector('meta[name="twitter:description"]').content = recipe.description;
+        if (recipe.image) {
+          document.querySelector('meta[property="og:image"]').content = recipe.image;
+          document.querySelector('meta[name="twitter:image"]').content = recipe.image;
+        }
+
+        // Add Recipe structured data (JSON-LD)
+        const jsonLd = {
+          "@context": "https://schema.org",
+          "@type": "Recipe",
+          "name": recipe.title,
+          "description": recipe.description,
+          "image": recipe.image || '',
+          "prepTime": recipe.prep_time,
+          "cookTime": recipe.cook_time,
+          "recipeYield": recipe.servings + ' servings',
+          "recipeIngredient": recipe.ingredients || [],
+          "recipeInstructions": (recipe.instructions || []).map((step, i) => ({
+            "@type": "HowToStep",
+            "position": i + 1,
+            "text": step
+          })),
+          "author": { "@type": "Organization", "name": "Kusinamate" }
+        };
+        const scriptEl = document.createElement('script');
+        scriptEl.type = 'application/ld+json';
+        scriptEl.textContent = JSON.stringify(jsonLd);
+        document.head.appendChild(scriptEl);
 
         const hero = document.getElementById('heroImg');
         if (recipe.image) {

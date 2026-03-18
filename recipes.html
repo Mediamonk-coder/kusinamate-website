@@ -5,6 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recipes — Kusinamate</title>
   <meta name="description" content="Delicious Filipino recipes using Kusinamate coating sauces. Quick, easy, and sulit na sulit!">
+  <link rel="canonical" href="https://kusinamate.com/recipes.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Recipes — Kusinamate">
+  <meta property="og:description" content="Delicious Filipino recipes using Kusinamate coating sauces. Quick, easy, and sulit na sulit!">
+  <meta property="og:image" content="https://kusinamate.com/assets/hero-lifestyle.png">
+  <meta property="og:url" content="https://kusinamate.com/recipes.html">
+  <meta property="og:site_name" content="Kusinamate">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Recipes — Kusinamate">
+  <meta name="twitter:description" content="Delicious Filipino recipes using Kusinamate coating sauces. Quick, easy, and sulit na sulit!">
+  <meta name="twitter:image" content="https://kusinamate.com/assets/hero-lifestyle.png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -233,7 +249,7 @@
         const tagColor = recipe.tag_color || '#D4380D';
         const hasImage = recipe.image && recipe.image.length > 0;
         const imageHtml = hasImage
-          ? `<img class="recipe-card-image" src="${recipe.image}" alt="${recipe.title}">`
+          ? `<img class="recipe-card-image" loading="lazy" src="${recipe.image}" alt="${recipe.title}">`
           : `<div class="recipe-card-image" style="background: linear-gradient(135deg, ${colors[0]}, ${colors[1]}); display: flex; align-items: center; justify-content: center;">
               <span style="color: rgba(255,255,255,0.7); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">${recipe.sauce}</span>
             </div>`;
