@@ -2051,6 +2051,24 @@
       if (e.key === 'Escape') closePartnerModal();
     });
 
+    const BASIN_ENDPOINT = 'https://usebasin.com/f/ab0493588235';
+
+    async function submitToBasin(payload) {
+      const formBody = new URLSearchParams(payload).toString();
+      const res = await fetch(BASIN_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json'
+        },
+        body: formBody
+      });
+
+      if (!res.ok) {
+        throw new Error(`Basin submission failed (${res.status})`);
+      }
+    }
+
     async function submitPartnerInquiry(e) {
       e.preventDefault();
       const btn = document.getElementById('submitBtn');
@@ -2086,6 +2104,16 @@
         message: message
       };
 
+      const basinPayload = {
+        partner_type: partnerType,
+        full_name: fullName,
+        business_name: businessName,
+        contact: contact,
+        message: message || '',
+        lead_type_id: leadTypeId,
+        source: 'kusinamate_website'
+      };
+
       try {
         const res = await fetch('https://mamnklluvbecmdsdepuh.supabase.co/functions/v1/submit-application', {
           method: 'POST',
@@ -2099,8 +2127,16 @@
         document.getElementById('modalSuccess').style.display = '';
         setTimeout(closePartnerModal, 3000);
       } catch (err) {
-        alert('Something went wrong. Please try again or message us on Facebook.');
-        console.error(err);
+        console.warn('Primary submit failed, attempting Basin fallback...', err);
+        try {
+          await submitToBasin(basinPayload);
+          document.getElementById('modalForm').style.display = 'none';
+          document.getElementById('modalSuccess').style.display = '';
+          setTimeout(closePartnerModal, 3000);
+        } catch (fallbackErr) {
+          alert('Something went wrong. Please try again or message us on Facebook.');
+          console.error('Fallback submit failed:', fallbackErr);
+        }
       } finally {
         btn.disabled = false;
         btn.textContent = 'Send Inquiry';
