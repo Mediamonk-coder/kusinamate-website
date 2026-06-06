@@ -2114,6 +2114,26 @@
         source: 'kusinamate_website'
       };
 
+      // Fire-and-forget: mirror lead to shared n8n webhook (Airtable + Slack).
+      // Never blocks or alters the user-facing flow below. Uses its own
+      // variables so the Supabase/Basin payloads above are left untouched.
+      const webhookData = { source: 'kusinamate.com', franchise_concept: 'Kusinamate Dealer', concept_code: 'KD', name: fullName };
+      if (!isEmail) webhookData.phone = contact;
+      if (partnerType) webhookData.package = `Kusinamate ${partnerType}`;
+      // Business name (and the email address, when the contact is an email rather
+      // than a phone) have no dedicated webhook key, so fold them into the message
+      // under labels that distinguish them from the customer's actual message.
+      const webhookNotes = [`Business: ${businessName}`];
+      if (isEmail) webhookNotes.push(`Email: ${contact}`);
+      let webhookMessage = webhookNotes.join('\n');
+      if (message) webhookMessage += `\n\nMessage: ${message}`;
+      webhookData.message = webhookMessage;
+      fetch('https://n8n.opcoutletshop.com/webhook/bb-leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: webhookData })
+      }).catch(console.error);
+
       try {
         const res = await fetch('https://mamnklluvbecmdsdepuh.supabase.co/functions/v1/submit-application', {
           method: 'POST',
