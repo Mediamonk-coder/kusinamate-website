@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recipe - Kusinamate</title>
+  <title>Recipe — Kusinamate</title>
   <meta name="description" content="Easy Filipino recipes made with Kusinamate coating sauces. Isang buhos, done na!">
   <link rel="canonical" href="https://kusinamate.com/recipe.html">
 
   <!-- Open Graph (dynamically updated by JS) -->
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Recipe - Kusinamate">
+  <meta property="og:title" content="Recipe — Kusinamate">
   <meta property="og:description" content="Easy Filipino recipes made with Kusinamate coating sauces.">
   <meta property="og:image" content="https://kusinamate.com/assets/hero-lifestyle.png">
   <meta property="og:url" content="https://kusinamate.com/recipe.html">
@@ -17,7 +17,7 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Recipe - Kusinamate">
+  <meta name="twitter:title" content="Recipe — Kusinamate">
   <meta name="twitter:description" content="Easy Filipino recipes made with Kusinamate coating sauces.">
   <meta name="twitter:image" content="https://kusinamate.com/assets/hero-lifestyle.png">
 
@@ -129,7 +129,7 @@
 <body>
   <nav class="back-nav">
     <div class="back-nav-inner">
-      <a href="index.html"> Back to Kusinamate</a>
+      <a href="index.html">← Back to Kusinamate</a>
       <a href="index.html"><img src="assets/logo.png" alt="Kusinamate" class="logo"></a>
     </div>
   </nav>
@@ -162,7 +162,7 @@
 
       <div class="cta-box">
         <h3>Try this with Kusinamate <span id="ctaSauce"></span>!</h3>
-        <p>Isang buhos lang - from sawa to wow!</p>
+        <p>Isang buhos lang — from sawa to wow!</p>
         <a href="index.html#products">Explore Our Sauces</a>
       </div>
     </div>
@@ -194,13 +194,13 @@
         }
 
         recipe.image = RecipeApi.imageUrl(recipe.image);
-        document.title = recipe.title + ' - Kusinamate Recipe';
+        document.title = recipe.title + ' — Kusinamate Recipe';
 
         // Update OG tags dynamically for social sharing crawlers that execute JS
-        document.querySelector('meta[property="og:title"]').content = recipe.title + ' - Kusinamate Recipe';
+        document.querySelector('meta[property="og:title"]').content = recipe.title + ' — Kusinamate Recipe';
         document.querySelector('meta[property="og:description"]').content = recipe.description;
         document.querySelector('meta[name="description"]').content = recipe.description;
-        document.querySelector('meta[name="twitter:title"]').content = recipe.title + ' - Kusinamate Recipe';
+        document.querySelector('meta[name="twitter:title"]').content = recipe.title + ' — Kusinamate Recipe';
         document.querySelector('meta[name="twitter:description"]').content = recipe.description;
         if (recipe.image) {
           document.querySelector('meta[property="og:image"]').content = recipe.image;

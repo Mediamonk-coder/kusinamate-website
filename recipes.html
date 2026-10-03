@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recipes - Kusinamate</title>
+  <title>Recipes — Kusinamate</title>
   <meta name="description" content="Delicious Filipino recipes using Kusinamate coating sauces. Quick, easy, and sulit na sulit!">
   <link rel="canonical" href="https://kusinamate.com/recipes.html">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Recipes - Kusinamate">
+  <meta property="og:title" content="Recipes — Kusinamate">
   <meta property="og:description" content="Delicious Filipino recipes using Kusinamate coating sauces. Quick, easy, and sulit na sulit!">
   <meta property="og:image" content="https://kusinamate.com/assets/hero-lifestyle.png">
   <meta property="og:url" content="https://kusinamate.com/recipes.html">
@@ -17,7 +17,7 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Recipes - Kusinamate">
+  <meta name="twitter:title" content="Recipes — Kusinamate">
   <meta name="twitter:description" content="Delicious Filipino recipes using Kusinamate coating sauces. Quick, easy, and sulit na sulit!">
   <meta name="twitter:image" content="https://kusinamate.com/assets/hero-lifestyle.png">
 
@@ -42,7 +42,7 @@
     }
     img { max-width: 100%; height: auto; display: block; }
 
-    /* �� NAV �� */
+    /* ── NAV ── */
     .nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
       background: rgba(255,248,240,0.95);
@@ -65,7 +65,7 @@
     .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 8px; }
     .hamburger span { width: 24px; height: 2.5px; background: var(--charcoal); border-radius: 2px; transition: all 0.3s; }
 
-    /* �� PAGE HEADER �� */
+    /* ── PAGE HEADER ── */
     .page-header {
       margin-top: 80px;
       padding: 60px 24px 40px;
@@ -92,7 +92,7 @@
       font-size: 0.9rem; color: #aaa; font-weight: 700; margin-top: 8px;
     }
 
-    /* �� RECIPE GRID �� */
+    /* ── RECIPE GRID ── */
     .recipes-container {
       max-width: 1200px; margin: 0 auto; padding: 40px 24px 80px;
     }
@@ -132,7 +132,7 @@
       font-size: 0.75rem; color: #aaa; font-weight: 700;
     }
 
-    /* �� ALL SAUCES VIEW �� */
+    /* ── ALL SAUCES VIEW ── */
     .sauce-filter {
       display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
       margin-bottom: 40px;
@@ -145,10 +145,10 @@
     .sauce-filter-btn:hover { border-color: var(--coral); color: var(--coral); }
     .sauce-filter-btn.active { background: var(--coral); color: white; border-color: var(--coral); }
 
-    /* �� LOADING �� */
+    /* ── LOADING ── */
     #loading { text-align: center; padding: 60px 24px; color: #999; }
 
-    /* �� FOOTER �� */
+    /* ── FOOTER ── */
     .footer {
       background: var(--charcoal); color: rgba(255,255,255,0.7); padding: 60px 24px 30px;
     }
@@ -162,7 +162,7 @@
       font-size: 0.8rem;
     }
 
-    /* �� RESPONSIVE �� */
+    /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       .recipe-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
       .nav-links { display: none; }
@@ -285,7 +285,7 @@
         document.getElementById('pageTitle').textContent = sauceFilter + ' Recipes';
         document.getElementById('pageSubtitle').textContent = `Discover delicious ways to use Kusinamate ${sauceFilter}. Isang buhos, glow up agad!`;
         document.getElementById('breadcrumbEnd').innerHTML = `<a href="recipes.html">Recipes</a> / ${RecipeApi.escape(sauceFilter)}`;
-        document.title = sauceFilter + ' Recipes - Kusinamate';
+        document.title = sauceFilter + ' Recipes — Kusinamate';
       }
 
       try {
