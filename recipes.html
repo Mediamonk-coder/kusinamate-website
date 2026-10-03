@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recipes — Kusinamate</title>
+  <title>Recipes - Kusinamate</title>
   <meta name="description" content="Delicious Filipino recipes using Kusinamate coating sauces. Quick, easy, and sulit na sulit!">
   <link rel="canonical" href="https://kusinamate.com/recipes.html">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Recipes — Kusinamate">
+  <meta property="og:title" content="Recipes - Kusinamate">
   <meta property="og:description" content="Delicious Filipino recipes using Kusinamate coating sauces. Quick, easy, and sulit na sulit!">
   <meta property="og:image" content="https://kusinamate.com/assets/hero-lifestyle.png">
   <meta property="og:url" content="https://kusinamate.com/recipes.html">
@@ -17,7 +17,7 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Recipes — Kusinamate">
+  <meta name="twitter:title" content="Recipes - Kusinamate">
   <meta name="twitter:description" content="Delicious Filipino recipes using Kusinamate coating sauces. Quick, easy, and sulit na sulit!">
   <meta name="twitter:image" content="https://kusinamate.com/assets/hero-lifestyle.png">
 
@@ -42,7 +42,7 @@
     }
     img { max-width: 100%; height: auto; display: block; }
 
-    /* ── NAV ── */
+    /* �� NAV �� */
     .nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
       background: rgba(255,248,240,0.95);
@@ -65,7 +65,7 @@
     .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 8px; }
     .hamburger span { width: 24px; height: 2.5px; background: var(--charcoal); border-radius: 2px; transition: all 0.3s; }
 
-    /* ── PAGE HEADER ── */
+    /* �� PAGE HEADER �� */
     .page-header {
       margin-top: 80px;
       padding: 60px 24px 40px;
@@ -92,7 +92,7 @@
       font-size: 0.9rem; color: #aaa; font-weight: 700; margin-top: 8px;
     }
 
-    /* ── RECIPE GRID ── */
+    /* �� RECIPE GRID �� */
     .recipes-container {
       max-width: 1200px; margin: 0 auto; padding: 40px 24px 80px;
     }
@@ -132,7 +132,7 @@
       font-size: 0.75rem; color: #aaa; font-weight: 700;
     }
 
-    /* ── ALL SAUCES VIEW ── */
+    /* �� ALL SAUCES VIEW �� */
     .sauce-filter {
       display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
       margin-bottom: 40px;
@@ -145,10 +145,10 @@
     .sauce-filter-btn:hover { border-color: var(--coral); color: var(--coral); }
     .sauce-filter-btn.active { background: var(--coral); color: white; border-color: var(--coral); }
 
-    /* ── LOADING ── */
+    /* �� LOADING �� */
     #loading { text-align: center; padding: 60px 24px; color: #999; }
 
-    /* ── FOOTER ── */
+    /* �� FOOTER �� */
     .footer {
       background: var(--charcoal); color: rgba(255,255,255,0.7); padding: 60px 24px 30px;
     }
@@ -162,7 +162,7 @@
       font-size: 0.8rem;
     }
 
-    /* ── RESPONSIVE ── */
+    /* �� RESPONSIVE �� */
     @media (max-width: 900px) {
       .recipe-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
       .nav-links { display: none; }
@@ -215,6 +215,7 @@
     </div>
   </footer>
 
+  <script src="recipe-api.js"></script>
   <script>
     // Mobile menu
     const hamburger = document.getElementById('hamburger');
@@ -225,7 +226,8 @@
     });
 
     const SUPABASE_URL = 'https://mzjaqjxdisxrnxgqpxpo.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im16amFxanhkaXN4cm54Z3FweHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY1MTkzMTQsImV4cCI6MjA2MjA5NTMxNH0.z9Wy0-tsaMlkS1UJbOGSXkVaqKh59iGm-qucL1uHnDU';
+    const SUPABASE_KEY = 'sb_publishable_5BmRNBytl2oQ16q6J808Gw_Gi7bTkQZ';
+    const readRecipes = RecipeApi.create(SUPABASE_URL, SUPABASE_KEY);
 
     const params = new URLSearchParams(window.location.search);
     const sauceFilter = params.get('sauce');
@@ -246,27 +248,28 @@
 
       recipes.forEach((recipe, i) => {
         const colors = colorPairs[i % colorPairs.length];
-        const tagColor = recipe.tag_color || '#D4380D';
-        const hasImage = recipe.image && recipe.image.length > 0;
+        const tagColor = RecipeApi.color(recipe.tag_color);
+        const safeImage = RecipeApi.imageUrl(recipe.image);
+        const hasImage = Boolean(safeImage);
         const imageHtml = hasImage
-          ? `<img class="recipe-card-image" loading="lazy" src="${recipe.image}" alt="${recipe.title}">`
+          ? `<img class="recipe-card-image" loading="lazy" src="${RecipeApi.escape(safeImage)}" alt="${RecipeApi.escape(recipe.title)}">`
           : `<div class="recipe-card-image" style="background: linear-gradient(135deg, ${colors[0]}, ${colors[1]}); display: flex; align-items: center; justify-content: center;">
-              <span style="color: rgba(255,255,255,0.7); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">${recipe.sauce}</span>
+              <span style="color: rgba(255,255,255,0.7); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">${RecipeApi.escape(recipe.sauce)}</span>
             </div>`;
 
         const card = document.createElement('a');
         card.className = 'recipe-card';
-        card.href = 'recipe.html?id=' + recipe.id;
+        card.href = 'recipe.html?id=' + encodeURIComponent(recipe.slug);
         card.innerHTML = `
           ${imageHtml}
           <div class="recipe-card-body">
-            <span class="recipe-tag" style="background: ${tagColor}18; color: ${tagColor};">${recipe.tag}</span>
-            <h3>${recipe.title}</h3>
-            <p>${recipe.description}</p>
+            <span class="recipe-tag" style="background: ${tagColor}18; color: ${tagColor};">${RecipeApi.escape(recipe.tag)}</span>
+            <h3>${RecipeApi.escape(recipe.title)}</h3>
+            <p>${RecipeApi.escape(recipe.description)}</p>
             <div class="recipe-meta-row">
-              <span>${recipe.prep_time} prep</span>
-              <span>${recipe.cook_time} cook</span>
-              <span>${recipe.servings} servings</span>
+              <span>${RecipeApi.escape(recipe.prep_time)} prep</span>
+              <span>${RecipeApi.escape(recipe.cook_time)} cook</span>
+              <span>${RecipeApi.escape(recipe.servings)} servings</span>
             </div>
           </div>
         `;
@@ -275,32 +278,20 @@
     }
 
     (async () => {
+      // Update page header based on filter
+      if (sauceFilter) {
+        document.getElementById('sauceLabel').textContent = sauceFilter;
+        document.getElementById('sauceLabel').style.display = '';
+        document.getElementById('pageTitle').textContent = sauceFilter + ' Recipes';
+        document.getElementById('pageSubtitle').textContent = `Discover delicious ways to use Kusinamate ${sauceFilter}. Isang buhos, glow up agad!`;
+        document.getElementById('breadcrumbEnd').innerHTML = `<a href="recipes.html">Recipes</a> / ${RecipeApi.escape(sauceFilter)}`;
+        document.title = sauceFilter + ' Recipes - Kusinamate';
+      }
+
       try {
-        // Fetch all published recipes
-        let url = `${SUPABASE_URL}/rest/v1/recipes?published=eq.true&select=*&order=created_at.desc`;
-        if (sauceFilter) {
-          url += `&sauce=eq.${encodeURIComponent(sauceFilter)}`;
-        }
-
-        const res = await fetch(url, {
-          headers: {
-            'apikey': SUPABASE_ANON_KEY,
-            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-          }
-        });
-        const recipes = await res.json();
-
-        document.getElementById('loading').style.display = 'none';
-
-        // Update page header based on filter
-        if (sauceFilter) {
-          document.getElementById('sauceLabel').textContent = sauceFilter;
-          document.getElementById('sauceLabel').style.display = '';
-          document.getElementById('pageTitle').textContent = sauceFilter + ' Recipes';
-          document.getElementById('pageSubtitle').textContent = `Discover delicious ways to use Kusinamate ${sauceFilter}. Isang buhos, glow up agad!`;
-          document.getElementById('breadcrumbEnd').innerHTML = `<a href="recipes.html">Recipes</a> / ${sauceFilter}`;
-          document.title = sauceFilter + ' Recipes — Kusinamate';
-        }
+        const query = { order: 'created_at.desc' };
+        if (sauceFilter) query.sauce = 'eq.' + sauceFilter;
+        const recipes = await readRecipes(query);
 
         document.getElementById('recipeCount').textContent = recipes.length + ' recipe' + (recipes.length !== 1 ? 's' : '');
 
@@ -335,9 +326,12 @@
         }
 
         renderRecipes(recipes);
+        document.getElementById('loading').style.display = 'none';
       } catch (e) {
-        document.getElementById('loading').textContent = 'Could not load recipes.';
-        console.error(e);
+        document.getElementById('recipeGrid').replaceChildren();
+        document.getElementById('sauceFilter').replaceChildren();
+        document.getElementById('recipeCount').textContent = '';
+        RecipeApi.message(document.getElementById('loading'), 'Could not load recipes. Please try again later.', true);
       }
     })();
   </script>

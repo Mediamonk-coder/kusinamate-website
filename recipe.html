@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recipe — Kusinamate</title>
+  <title>Recipe - Kusinamate</title>
   <meta name="description" content="Easy Filipino recipes made with Kusinamate coating sauces. Isang buhos, done na!">
   <link rel="canonical" href="https://kusinamate.com/recipe.html">
 
   <!-- Open Graph (dynamically updated by JS) -->
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Recipe — Kusinamate">
+  <meta property="og:title" content="Recipe - Kusinamate">
   <meta property="og:description" content="Easy Filipino recipes made with Kusinamate coating sauces.">
   <meta property="og:image" content="https://kusinamate.com/assets/hero-lifestyle.png">
   <meta property="og:url" content="https://kusinamate.com/recipe.html">
@@ -17,7 +17,7 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Recipe — Kusinamate">
+  <meta name="twitter:title" content="Recipe - Kusinamate">
   <meta name="twitter:description" content="Easy Filipino recipes made with Kusinamate coating sauces.">
   <meta name="twitter:image" content="https://kusinamate.com/assets/hero-lifestyle.png">
 
@@ -129,7 +129,7 @@
 <body>
   <nav class="back-nav">
     <div class="back-nav-inner">
-      <a href="index.html">← Back to Kusinamate</a>
+      <a href="index.html"> Back to Kusinamate</a>
       <a href="index.html"><img src="assets/logo.png" alt="Kusinamate" class="logo"></a>
     </div>
   </nav>
@@ -162,45 +162,45 @@
 
       <div class="cta-box">
         <h3>Try this with Kusinamate <span id="ctaSauce"></span>!</h3>
-        <p>Isang buhos lang — from sawa to wow!</p>
+        <p>Isang buhos lang - from sawa to wow!</p>
         <a href="index.html#products">Explore Our Sauces</a>
       </div>
     </div>
   </div>
 
+  <script src="recipe-api.js"></script>
   <script>
     const SUPABASE_URL = 'https://mzjaqjxdisxrnxgqpxpo.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im16amFxanhkaXN4cm54Z3FweHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY1MTkzMTQsImV4cCI6MjA2MjA5NTMxNH0.z9Wy0-tsaMlkS1UJbOGSXkVaqKh59iGm-qucL1uHnDU';
+    const SUPABASE_KEY = 'sb_publishable_5BmRNBytl2oQ16q6J808Gw_Gi7bTkQZ';
+    const readRecipes = RecipeApi.create(SUPABASE_URL, SUPABASE_KEY);
 
     const params = new URLSearchParams(window.location.search);
-    const recipeId = params.get('id');
+    const recipeId = (params.get('id') || '').trim();
 
     (async () => {
       try {
-        const res = await fetch(
-          `${SUPABASE_URL}/rest/v1/recipes?id=eq.${encodeURIComponent(recipeId)}&select=*`,
-          {
-            headers: {
-              'apikey': SUPABASE_ANON_KEY,
-              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-            }
-          }
-        );
-        const data = await res.json();
+        if (!recipeId) {
+          RecipeApi.message(document.getElementById('loading'), 'Recipe not found.');
+          return;
+        }
+        // New links use slugs; keep old bookmarked UUID links working.
+        const field = RecipeApi.isUuid(recipeId) ? 'id' : 'slug';
+        const data = await readRecipes({ [field]: 'eq.' + recipeId, limit: '1' });
         const recipe = data[0];
 
         if (!recipe) {
-          document.getElementById('loading').textContent = 'Recipe not found.';
+          RecipeApi.message(document.getElementById('loading'), 'Recipe not found.');
           return;
         }
 
-        document.title = recipe.title + ' — Kusinamate Recipe';
+        recipe.image = RecipeApi.imageUrl(recipe.image);
+        document.title = recipe.title + ' - Kusinamate Recipe';
 
         // Update OG tags dynamically for social sharing crawlers that execute JS
-        document.querySelector('meta[property="og:title"]').content = recipe.title + ' — Kusinamate Recipe';
+        document.querySelector('meta[property="og:title"]').content = recipe.title + ' - Kusinamate Recipe';
         document.querySelector('meta[property="og:description"]').content = recipe.description;
         document.querySelector('meta[name="description"]').content = recipe.description;
-        document.querySelector('meta[name="twitter:title"]').content = recipe.title + ' — Kusinamate Recipe';
+        document.querySelector('meta[name="twitter:title"]').content = recipe.title + ' - Kusinamate Recipe';
         document.querySelector('meta[name="twitter:description"]').content = recipe.description;
         if (recipe.image) {
           document.querySelector('meta[property="og:image"]').content = recipe.image;
@@ -238,7 +238,7 @@
           hero.style.display = 'none';
         }
 
-        const tagColor = recipe.tag_color || '#D4380D';
+        const tagColor = RecipeApi.color(recipe.tag_color);
         document.getElementById('tagEl').textContent = recipe.tag;
         document.getElementById('tagEl').style.background = tagColor + '18';
         document.getElementById('tagEl').style.color = tagColor;
@@ -269,7 +269,8 @@
         document.getElementById('loading').style.display = 'none';
         document.getElementById('recipeContent').style.display = 'block';
       } catch (e) {
-        document.getElementById('loading').textContent = 'Could not load recipe.';
+        document.getElementById('recipeContent').style.display = 'none';
+        RecipeApi.message(document.getElementById('loading'), 'Could not load recipe. Please try again later.', true);
       }
     })();
   </script>
