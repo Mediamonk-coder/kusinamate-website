@@ -1746,27 +1746,29 @@
       <div id="modalForm">
         <h3>Partner Inquiry</h3>
         <div class="modal-subtitle" id="modalPartnerType">Stock & Sell</div>
-        <form class="modal-form" id="partnerForm" onsubmit="submitPartnerInquiry(event)">
+        <form class="modal-form" id="partnerForm">
           <label for="pFullName">Full Name *</label>
-          <input type="text" id="pFullName" required placeholder="Juan dela Cruz">
-          <label for="pBusinessName">Business Name *</label>
-          <input type="text" id="pBusinessName" required placeholder="Juan's Sari-Sari Store">
+          <input type="text" id="pFullName" name="full_name" maxlength="100" required placeholder="Juan dela Cruz">
+          <label for="pBusinessName">Business Name (optional)</label>
+          <input type="text" id="pBusinessName" name="business_name" maxlength="150" placeholder="Juan's Sari-Sari Store">
           <label for="pContact">Contact Number or Email *</label>
-          <input type="text" id="pContact" required placeholder="09171234567 or juan@email.com">
+          <input type="text" id="pContact" name="contact" maxlength="254" required placeholder="09171234567 or juan@email.com">
           <label for="pPartnerType">Partner Type</label>
-          <select id="pPartnerType">
+          <select id="pPartnerType" name="partner_type">
             <option value="Stock & Sell">Stock &amp; Sell</option>
             <option value="Cook & Create">Cook &amp; Create</option>
           </select>
           <label for="pMessage">Message (optional)</label>
-          <textarea id="pMessage" placeholder="Tell us about your business..."></textarea>
+          <textarea id="pMessage" name="message" maxlength="3000" placeholder="Tell us about your business..."></textarea>
+          <p role="status" aria-live="polite" tabindex="-1" hidden></p>
           <button type="submit" class="btn-submit" id="submitBtn">Send Inquiry</button>
+          <p style="font-size:.9rem;margin-top:14px">You can also email <a href="mailto:hello@kusinamate.com">hello@kusinamate.com</a>.</p>
         </form>
       </div>
       <div id="modalSuccess" class="modal-success" style="display:none;">
         <div class="checkmark">&#10003;</div>
-        <h3>Inquiry Sent!</h3>
-        <p>Salamat! We'll get back to you within 24-48 hours.</p>
+        <h3>Inquiry accepted</h3>
+        <p>Your inquiry was accepted for email delivery. Salamat!</p>
       </div>
     </div>
   </div>
@@ -2025,7 +2027,7 @@
       document.getElementById('modalPartnerType').textContent = type;
       document.getElementById('modalForm').style.display = '';
       document.getElementById('modalSuccess').style.display = 'none';
-      document.getElementById('partnerForm').reset();
+      // Preserve entered details when reopening after a failed or uncertain send.
       document.getElementById('pPartnerType').value = type;
       document.getElementById('partnerModal').classList.add('active');
       document.body.style.overflow = 'hidden';
@@ -2046,118 +2048,9 @@
       if (e.key === 'Escape') closePartnerModal();
     });
 
-    const BASIN_ENDPOINT = 'https://usebasin.com/f/ab0493588235';
-
-    async function submitToBasin(payload) {
-      const formBody = new URLSearchParams(payload).toString();
-      const res = await fetch(BASIN_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Accept': 'application/json'
-        },
-        body: formBody
-      });
-
-      if (!res.ok) {
-        throw new Error(`Basin submission failed (${res.status})`);
-      }
-    }
-
-    async function submitPartnerInquiry(e) {
-      e.preventDefault();
-      const btn = document.getElementById('submitBtn');
-      btn.disabled = true;
-      btn.textContent = 'Sending...';
-
-      const partnerType = document.getElementById('pPartnerType').value;
-      const fullName = document.getElementById('pFullName').value.trim();
-      const businessName = document.getElementById('pBusinessName').value.trim();
-      const contact = document.getElementById('pContact').value.trim();
-      const message = document.getElementById('pMessage').value.trim() || undefined;
-      const isEmail = contact.includes('@');
-
-      // Validate contact: must be a valid email or PH phone number
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      const phonePattern = /^(09|\+639)\d{9}$/;
-      if (!emailPattern.test(contact) && !phonePattern.test(contact.replace(/[\s\-]/g, ''))) {
-        alert('Please enter a valid email address or Philippine mobile number (e.g. 09171234567).');
-        btn.disabled = false;
-        btn.textContent = 'Send Inquiry';
-        return;
-      }
-
-      const isDealer = partnerType === 'Stock & Sell';
-      const leadTypeId = isDealer
-        ? '9538b828-453a-4260-9491-846a06a032ec'   // Kusinamate Dealer
-        : '9ee8f490-a668-4dc8-af82-89223f4d54f7';  // Food Service Account
-
-      const customFields = {
-        full_name: fullName,
-        business_name: businessName,
-        [isEmail ? 'email' : 'phone']: contact,
-        message: message
-      };
-
-      const basinPayload = {
-        partner_type: partnerType,
-        full_name: fullName,
-        business_name: businessName,
-        contact: contact,
-        message: message || '',
-        lead_type_id: leadTypeId,
-        source: 'kusinamate_website'
-      };
-
-      // Fire-and-forget: mirror lead to shared n8n webhook (Airtable + Slack).
-      // Never blocks or alters the user-facing flow below. Uses its own
-      // variables so the Supabase/Basin payloads above are left untouched.
-      const webhookData = { source: 'kusinamate.com', franchise_concept: 'Kusinamate Dealer', concept_code: 'KD', name: fullName };
-      if (!isEmail) webhookData.phone = contact;
-      if (partnerType) webhookData.package = `Kusinamate ${partnerType}`;
-      // Business name (and the email address, when the contact is an email rather
-      // than a phone) have no dedicated webhook key, so fold them into the message
-      // under labels that distinguish them from the customer's actual message.
-      const webhookNotes = [`Business: ${businessName}`];
-      if (isEmail) webhookNotes.push(`Email: ${contact}`);
-      let webhookMessage = webhookNotes.join('\n');
-      if (message) webhookMessage += `\n\nMessage: ${message}`;
-      webhookData.message = webhookMessage;
-      fetch('https://n8n.opcoutletshop.com/webhook/bb-leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data: webhookData })
-      }).catch(console.error);
-
-      try {
-        const res = await fetch('https://mamnklluvbecmdsdepuh.supabase.co/functions/v1/submit-application', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ lead_type_id: leadTypeId, custom_fields: customFields, source: 'kusinamate_website' })
-        });
-        const data = await res.json();
-        if (!data.success) throw new Error(data.message);
-
-        document.getElementById('modalForm').style.display = 'none';
-        document.getElementById('modalSuccess').style.display = '';
-        setTimeout(closePartnerModal, 3000);
-      } catch (err) {
-        console.warn('Primary submit failed, attempting Basin fallback...', err);
-        try {
-          await submitToBasin(basinPayload);
-          document.getElementById('modalForm').style.display = 'none';
-          document.getElementById('modalSuccess').style.display = '';
-          setTimeout(closePartnerModal, 3000);
-        } catch (fallbackErr) {
-          alert('Something went wrong. Please try again or message us on Facebook.');
-          console.error('Fallback submit failed:', fallbackErr);
-        }
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Send Inquiry';
-      }
-    }
   </script>
 
+<script src="direct-contact-config.js"></script>
+<script src="direct-contact.js"></script>
 </body>
 </html>

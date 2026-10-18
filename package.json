@@ -1,0 +1,13 @@
+{
+  "name": "kusinamate-website",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "build": "node scripts/build.mjs"
+  },
+  "dependencies": {
+    "@vercel/firewall": "1.2.6",
+    "nodemailer": "10.1.2"
+  }
+}
