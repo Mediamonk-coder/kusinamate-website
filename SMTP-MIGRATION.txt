@@ -1,29 +1,4 @@
-Prepared migration, NOT deployed until owner binds SMTP variables.
-Approved fixed recipient: hello@kusinamate.com (alias on admin@opcoutletshop.com).
-Production project: kusinamate-website / prj_wZ2HybcFP5nKWHlTL409MQKxIfng.
-Owner must add this project, Production only, to existing shared SMTP_USER and
-SMTP_PASS. Never copy, decrypt, print or commit credential values.
-Required nonsecret production config before deployment:
-CONTACT_SEND_ENABLED=true
-CONTACT_RATE_LIMIT_MODE=temporary-disabled
-CONTACT_RATE_LIMIT_READY=false
-Keep Preview sending disabled. Advanced distributed protection is deferred.
-
-Previous flow: primary Supabase submit-application endpoint with lead_type_id,
-custom_fields and source; simultaneous n8n bb-leads webhook documented as
-Airtable+Slack mirror; Basin fallback. The site code therefore indicates lead
-capture/persistence beyond email, but exact backend writes/notifications could
-not be inspected: Supabase get_edge_function returned permission denied.
-This migration stops NEW inquiry submissions to all three legacy endpoints.
-No existing records, backend functions, databases or automation settings are
-deleted or modified. Future submissions go only by SMTP to the approved alias;
-no new CRM/database persistence is introduced. Recipe reads remain unchanged.
-
-Retained validation, origin checks, body/field limits, honeypot, fixed recipient,
-email Reply-To, per-instance throttle; explicit temporary distributed-rate mode.
-No automatic retry or secondary delivery channel after ambiguous email results.
-Client retains fields and reports acceptance only when SMTP accepted recipient.
-
-After binding and deployment: send exactly ONE approved synthetic test inquiry
-to hello@kusinamate.com via normal runtime. Do not repeat uncertain sends.
-Record SMTP acceptance separately from owner inbox confirmation.
+HOLD: direct SMTP + Slack implementation prepared locally, not pushed/deployed.
+See CONTACT-DELIVERY-DESIGN.txt for configuration, tests and retry limitations.
+SMTP Production bindings verified; Slack destination/webhook setup still pending.
+Live production unchanged. No real email or Slack test performed.

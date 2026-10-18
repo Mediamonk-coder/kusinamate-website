@@ -1,3 +1,4 @@
+import {createSlackMirror,validSlackWebhook} from '../lib/slack.mjs';
 import nodemailer from 'nodemailer';
 import {checkRateLimit} from '@vercel/firewall';
 import {createSharedRateCheck} from '../lib/shared-rate.mjs';
@@ -6,7 +7,8 @@ const settings={"brand": "Kusinamate", "recipient": "hello@kusinamate.com", "ori
 let transport;
 const handler=createContactHandler({...settings,
  sharedRateCheck:createSharedRateCheck({check:checkRateLimit,hosts:settings.origins.filter(x=>x.startsWith('https://')).map(x=>new URL(x).host)}),
- configured:()=>Boolean(process.env.SMTP_USER&&process.env.SMTP_PASS&&process.env.CONTACT_SEND_ENABLED==='true'),
+ configured:()=>Boolean(process.env.SMTP_USER&&process.env.SMTP_PASS&&process.env.CONTACT_SEND_ENABLED==='true'&&process.env.CONTACT_SLACK_ENABLED==='true'&&validSlackWebhook(process.env.SLACK_WEBHOOK_URL)),
+ mirror:createSlackMirror({url:()=>process.env.SLACK_WEBHOOK_URL}),
  send:async message=>{
   transport??=nodemailer.createTransport({host:'smtp.gmail.com',port:465,secure:true,
    connectionTimeout:10000,greetingTimeout:10000,socketTimeout:15000,

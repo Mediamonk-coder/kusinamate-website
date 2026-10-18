@@ -42,12 +42,12 @@
       if(response.status===429){cooldown=Date.now()+900000;announce('Please wait 15 minutes before sending another inquiry, or email our team.','error');return;}
       let result;try{result=await response.json()}catch{throw new Error('Unconfirmed response')}
       if(response.ok&&result.success===true&&result.accepted===true&&typeof result.id==='string'){
-        const message='Your inquiry was accepted for email delivery. Thank you for getting in touch.';
+        const message=`Your inquiry was accepted for email delivery. Thank you for getting in touch. Reference: ${result.id}`;
         outcomes.set(body,message);announce(message,'success');
       }
       else if([400,403,404,405,413,415,503].includes(response.status)){
         announce([404,405,503].includes(response.status)?'The inquiry form is unavailable right now. Please use the email link on this page.':'Please check your details or use the email link on this page.','error');
-      } else {outcomes.set(body,uncertain);announce(uncertain,'error');}
+      } else {const message=uncertain+(typeof result.id==='string'&&/^[0-9a-f-]{36}$/.test(result.id)?` Reference: ${result.id}`:'');outcomes.set(body,message);announce(message,'error');}
     } catch {outcomes.set(body,uncertain);announce(uncertain,'error');}
     finally {clearTimeout(timer);pending=false;button.disabled=false;}
   }

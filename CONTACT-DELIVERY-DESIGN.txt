@@ -1,0 +1,46 @@
+KUSINAMATE DIRECT SMTP + SLACK: PREPARED, NOT ACTIVATED
+Supersedes the prior n8n/durable-ledger proposal. Owner chose direct Slack webhook.
+Current live production remains f7e4ba2. No push, deploy or live test this turn.
+
+Prepared flow: same-origin /api/contact validates once, then attempts fixed
+hello@kusinamate.com SMTP and direct Slack independently, once each.
+SLACK_WEBHOOK_URL is read only by server code, restricted to Slack HTTPS services
+URLs. No URL, provider body/error, credentials or visitor text is logged.
+Slack uses plain_text blocks (not mrkdwn), static notification fallback, no
+mention expansion, no link unfurls, bounded fields and a 7-second request timeout.
+Email and Slack outcomes are separate. Accepted email returns success even when
+Slack fails; no fallback or automatic retry sends a second email. Email unknown
+returns an inquiry reference, and browser retains details and blocks repeat
+same-page submissions. Slack acceptance means HTTP acceptance, not human receipt.
+Legacy Supabase/Basin/n8n submissions are removed in prepared code only. Existing
+backend records/services are untouched. Recipe reads unchanged.
+
+MAINTAINABILITY TRADEOFF (NO NEW SERVICES)
+No database, durable queue or retry service introduced. Duplicate prevention is
+same-page only; reloads, new tabs and manual repeated submissions can duplicate.
+No durable reconciliation or replay endpoint. Unknown network outcomes are never
+automatically retried. Known partial success never triggers whole-request retry.
+There is no exactly-once guarantee. Durable cross-session deduplication would
+require an approved persistent store and a separate design; it is not necessary
+for this simple send-once implementation and has not been introduced.
+
+BINDINGS / ACTIVATION GATES
+Existing SMTP_USER and SMTP_PASS Production bindings verified metadata-only.
+Owner must verify Slack workspace/channel and enter webhook directly into Vercel
+as sensitive server-only SLACK_WEBHOOK_URL, Production only. No secret in chat,
+repository, browser or logs. No webhook creation/binding performed here.
+Nonsecret flags, to set only when activation authorized:
+CONTACT_SEND_ENABLED=true (Production); false or absent in Preview
+CONTACT_SLACK_ENABLED=true (Production); false or absent in Preview
+CONTACT_RATE_LIMIT_MODE=temporary-disabled (existing approved deferral)
+CONTACT_RATE_LIMIT_READY=false
+Both send flags and valid webhook/SMTP settings are required before any delivery.
+No client-side variable contains webhook or credentials.
+
+VALIDATION
+27 local tests passed: validation, rate checks, fixed recipient, client double
+click/repeat protection, Slack plain text/bounds/URL checks, redirects, timeout,
+partial SMTP/Slack outcomes and one attempt per destination. Build passed.
+All delivery tests use mocks, never real network delivery. One labeled real email
+inquiry was previously approved, but remains pending routing readiness and exact
+Slack destination/test authorization. No test email or Slack message sent.
