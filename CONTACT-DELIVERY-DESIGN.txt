@@ -44,3 +44,28 @@ partial SMTP/Slack outcomes and one attempt per destination. Build passed.
 All delivery tests use mocks, never real network delivery. One labeled real email
 inquiry was previously approved, but remains pending routing readiness and exact
 Slack destination/test authorization. No test email or Slack message sent.
+
+READINESS UPDATE - October 18, 2026
+Owner approves email + direct Slack only for NEW Kusinamate inquiries. Historical
+lead records remain untouched. Food Solutions capture and Barangay Burger are
+outside this change.
+Approved Slack destination: Onprem Concepts Corp, workspace T07GXQJR0DT,
+private #website-inquiries, channel C0C9PNY82FR. Do not use #franchising-field-ops.
+Owner confirms new webhook saved. Metadata verifies sensitive shared
+SLACK_WEBHOOK_URL targets Production and includes Kusinamate project
+prj_wZ2HybcFP5nKWHlTL409MQKxIfng. SMTP_USER/PASS bindings also reverified.
+No values retrieved. Metadata cannot independently prove webhook channel routing;
+owner-confirmed setup and later one authorized delivery test establish that.
+Recheck: 27/27 tests passed; build passed. No live sends.
+
+ROLLOUT, PENDING OWNER APPROVAL
+1. Await approval to activate and send one labelled inquiry to both destinations.
+2. Review branch diff and built public allowlist; keep credentials server-only.
+3. Set Production nonsecret flags documented above, Preview disabled. Push/merge
+approved branch into production main and verify deployed commit/READY status.
+4. Check GET/assets and invalid-form rejection without sending messages.
+5. Submit exactly one labelled synthetic inquiry via normal contact endpoint.
+Record reference and independent acceptance outcomes. Never repeat uncertain send.
+6. Owner confirms email receipt and receipt in approved private Slack channel.
+If partial delivery, investigate reference/status; do not resend whole submission.
+No rollout action, configuration mutation, deployment or test is authorized yet.

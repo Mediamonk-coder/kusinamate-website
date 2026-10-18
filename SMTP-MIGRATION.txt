@@ -1,4 +1,6 @@
-HOLD: direct SMTP + Slack implementation prepared locally, not pushed/deployed.
-See CONTACT-DELIVERY-DESIGN.txt for configuration, tests and retry limitations.
-SMTP Production bindings verified; Slack destination/webhook setup still pending.
-Live production unchanged. No real email or Slack test performed.
+HOLD: implementation ready; activation and dual-destination test approval pending.
+Approved new Slack destination is private #website-inquiries C0C9PNY82FR in
+Onprem Concepts Corp T07GXQJR0DT. Owner confirmed webhook saved; shared Production
+SLACK_WEBHOOK_URL and SMTP_USER/PASS project bindings verified metadata-only.
+27 tests and build passed again. See CONTACT-DELIVERY-DESIGN.txt for rollout.
+No push/deploy, config mutation or real email/Slack test performed.
